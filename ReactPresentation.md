@@ -1,14 +1,6 @@
 # ReactJS
 
-### An approach for production
-
-----
-
-## A personal approach
-
-This presentation outlines my latest approach to handle a ReactJS based project.
-
-See this as a basis for discussion.
+### Structuring development
 
 ----
 
@@ -47,9 +39,9 @@ A *Component* is a description of how to render a part of our application, like 
 import React from 'react'
 
 const button = ({disabled, text, click}) => (
-	<button onClick={disabled ? () => {} : click} >
-		{text}
-	</button>
+    <button onClick={disabled ? () => {} : click} >
+        {text}
+    </button>
 )
 
 export default button
@@ -69,7 +61,10 @@ It takes a unidirectional approach to dataflow. Meaning data only flows in a sin
 
 ----
 
-<img src="res/redux-flow.png" style="height: 50vh;padding: 3rem;" />
+<img id="flowDiagram" src="res/redux-flow.png" style="height: 45vh;padding: 3rem;" />
+<label for="flowDiagram">
+	Visualizing dataflow in Redux
+</label>
 
 ----
 
@@ -80,8 +75,8 @@ The *Store* is the current representation of the state of your application.
 ```JavaScript
 //The store is simply one big object in JavaScript.
 {
-	currentlyPrinting: false,
-	orders: [...]
+    printing: false,
+    orders: [...]
 }
 ```
 
@@ -94,9 +89,9 @@ You can think of this as an event. While the *Action* is the actual thing being 
 ```JavaScript
 //Use ES6 Syntax to define a function.
 export const startPrinting = () => {
-	return {
-		type: 'PRINTING_START'
-	}
+    return {
+        type: 'PRINTING_START'
+    }
 }
 ```
 
@@ -108,20 +103,61 @@ export const startPrinting = () => {
 
 ```JavaScript
 //Return a state for the action or a standard one.
-const printing = (state = {printing: false}, action) => {
-	if(action.type === 'PRINTING_START') {
-		return {
-			printing: true
-		}
-	} else {		
-		return state
-	}
+const printing = (state = false, action) => {
+    if(action.type === 'PRINTING_START') {
+        return true
+    } else if(action.type === 'PRINTING_STOP') {
+		return false
+	} else {        
+        return state
+    }
 }
 ```
 
 ---
 
 # Folderstructure
+
+----
+
+### Overview
+
+```
+.
+├── docs                        All documentation lives here
+│   ├── actions                 Redux Action documentation
+│   ├── config                  Config to generate docs
+│   └── templates               Templates to generate docs
+├── node_modules                NPM dependencies
+├── package.json            
+├── src                        
+│   ├── cssPre                  Your CSS preprocessing language of choice
+│   ├── img                     Image resources
+│   └── js                      JavaScript files
+├── test                    
+│   └── reducers                Testing your reducers
+└── webpack.config.js           Webpack configuration
+```
+
+----
+
+### JS Folderstructure
+
+```
+.
+├── actions
+│   └── index.js                Your Actioncreators
+├── components                  Visible components
+│   ├── button.js
+│   └── orderList.js
+├── containers                  Redux containers
+│   └── visibleOrderList.js
+├── index.js                    The main entry point
+└── reducers                    Reducers for each part of the store
+    ├── index.js
+    ├── ordersReducer.js
+    └── printingReducer.js
+```
 
 ---
 
@@ -148,3 +184,13 @@ Helpful things and further reading.
 - Reveal for JS based slides
 - Reveal-md for prototyping
 - [nodetree](https://www.npmjs.com/package/nodetree) for nice filetrees
+
+
+<!-- Create some styles -->
+<style>
+	@media print {
+		img {
+			min-height: 300px;
+		}
+	}
+</style>
