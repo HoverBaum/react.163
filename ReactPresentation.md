@@ -63,7 +63,7 @@ It takes a unidirectional approach to dataflow. Meaning data only flows in a sin
 
 <img id="flowDiagram" src="res/redux-flow.png" style="height: 45vh;padding: 3rem;" />
 <label for="flowDiagram">
-	Visualizing dataflow in Redux
+    Visualizing dataflow in Redux
 </label>
 
 ----
@@ -107,8 +107,8 @@ const printing = (state = false, action) => {
     if(action.type === 'PRINTING_START') {
         return true
     } else if(action.type === 'PRINTING_STOP') {
-		return false
-	} else {        
+        return false
+    } else {        
         return state
     }
 }
@@ -163,6 +163,27 @@ const printing = (state = false, action) => {
 
 # Testing
 
+----
+
+### Reducers
+
+Since our reducers are pure functions they are an ideal thing to test.
+
+[*Tape*](https://github.com/substack/tape) is a lightweight testing framework for JavaScript. Let's look at how to use it for our ReactJS application.
+
+----
+
+### Testfiles
+
+```
+.
+├── reducers
+│   ├── orders.js               Testing orders reducer
+│   └── printing.js             Testing printing reducer
+└── test.js                     Entry point for all tests
+```
+
+
 ---
 
 # Debugging
@@ -185,12 +206,18 @@ Helpful things and further reading.
 - Reveal-md for prototyping
 - [nodetree](https://www.npmjs.com/package/nodetree) for nice filetrees
 
+----
+
+### Follow the links
+
+- [Introducing React](https://www.youtube.com/watch?v=XxVg_s8xAms)
+- [Redux devtools](https://github.com/gaearon/redux-devtools)
 
 <!-- Create some styles -->
 <style>
-	@media print {
-		img {
-			min-height: 300px;
-		}
-	}
+    @media print {
+        img {
+            min-height: 300px;
+        }
+    }
 </style>
