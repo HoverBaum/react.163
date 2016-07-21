@@ -116,6 +116,41 @@ const printing = (state = false, action) => {
 
 ---
 
+# Pure functions
+
+----
+
+## Definition
+
+A pure function is one that fulfills two conditions:
+
+- For a given input it always returns the same output
+- It has no *"side effects"*
+-
+----
+
+## Gains
+
+- Testability
+- Predictability
+- Timetravel
+
+We gain a lot from making our Components and Reducers pure functions and also have our Reducers return new Objects.
+
+----
+
+<img id="flowDiagram" src="res/updateStore1.png" style="height: 45vh;padding: 3rem;" />
+
+----
+
+<img id="flowDiagram" src="res/updateStore2.png" style="height: 45vh;padding: 3rem;" />
+
+----
+
+<img id="flowDiagram" src="res/updateStore.png" style="height: 45vh;padding: 3rem;" />
+
+---
+
 # Folderstructure
 
 ----
@@ -135,7 +170,8 @@ const printing = (state = false, action) => {
 │   ├── img                     Image resources
 │   └── js                      JavaScript files
 ├── test                    
-│   └── reducers                Testing your reducers
+│   ├── reducers                Testing your reducers
+│   └── test.js                 Entry point for all tests
 └── webpack.config.js           Webpack configuration
 ```
 
@@ -155,9 +191,17 @@ const printing = (state = false, action) => {
 ├── index.js                    The main entry point
 └── reducers                    Reducers for each part of the store
     ├── index.js
-    ├── ordersReducer.js
-    └── printingReducer.js
+    └── ordersReducer.js
 ```
+
+----
+
+Folderstructure helps especially to quickly find the JS files to work on, mainly distinguishing between:
+
+- Reducers
+- Components
+- Containers
+- Actions
 
 ---
 
