@@ -209,7 +209,7 @@ We gain a lot from making our Components and Reducers pure functions and also ha
 
 ----
 
-### 🔧 Code example
+### ➡ Code example
 
 Consider an array of Objects containing an id and some text.
 
@@ -563,6 +563,91 @@ const test = require('tape')
 require('./reducers/order')(test)
 require('./reducers/printing')(test)
 ```
+
+---
+
+# 🎓 Lessons learned
+
+----
+
+### 🎓 Normalize the Store
+
+Three weeks into development and suddenly all I do is dive deep into nested objects to find correlating ones.
+
+Pull Objects out, give them IDs and reference those.
+
+----
+
+#### 🎓 Before
+
+```javascript
+orders: [
+	{
+		orderId: 'ordersId',
+		name: 'John Doe',
+		packs: [
+			{
+				packId: 'packId'
+			}, ...
+		]
+	}, ...
+]
+```
+
+At `/pack/packId` which is the corresponding order?
+
+----
+
+#### 🎓 After
+
+
+```javascript
+orders: [
+	{
+		orderId: 'ordersId',
+		name: 'John Doe',
+		packs: ['packId', ...]
+	}, ...
+],
+packs: [
+	{
+		packId: 'packId',
+		orderId: 'orderId'
+	}, ...
+]
+```
+
+----
+
+### 🎓 Compute in Components
+
+**Task**: given the already delivered items and the total amount of items that need delivering, calculate the packages that need to be delivered.
+
+Influenced by the Order which has all things that need delivering and packaged packs.
+
+----
+
+#### 🎓 In Reducers
+
+Have both the *Orders* and *packs* Reducer calculate a *toBeDelivered*.
+
+**Problems:**
+- Reducers only know their own space in the Store
+- Where should this be saved
+- Create a way to only implement this once
+
+**Result:** super messy and buggy
+
+----
+
+#### 🎓 In Component
+
+There is only one component which wants to display this and if we have the packs and the order this is a simple transformation.
+
+**Benefits:**
+- Single point of implementation
+- Less code
+- Easier to reason about
 
 ---
 
