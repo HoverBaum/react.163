@@ -18,7 +18,7 @@ Or read [a full introduction to ES6 features](https://github.com/lukehoban/es6fe
 
 ---
 
-# An introduction
+# 💁 An introduction
 
 ----
 
@@ -30,7 +30,26 @@ Thus we need concepts and tools to compliment ReactJS when we want to build an a
 
 ----
 
-### Components
+### 💁 Basic Example
+
+```JavaScript
+import React from 'react'
+import { render } from 'react-dom'
+
+render (
+    <div>
+        Hello React
+    </div>,
+    document.getElementById('#app')
+)
+```
+
+Note:
+Components need to be wrapped in a single parent.
+
+----
+
+### 💁 Components
 
 A *Component* is a description of how to render a part of our application, like a button.
 
@@ -47,9 +66,12 @@ const button = ({disabled, text, click}) => (
 export default button
 ```
 
+Note:
+Uses Destructuring to achieve named paramteres that is where the `{}` come from.
+
 ---
 
-# Redux
+# 📦 Redux
 
 > Redux is a predictable state container for JavaScript apps.
 
@@ -68,7 +90,7 @@ It takes a unidirectional approach to dataflow. Meaning data only flows in a sin
 
 ----
 
-### Store
+### 📦 Store
 
 The *Store* is the current representation of the state of your application.
 
@@ -82,7 +104,7 @@ The *Store* is the current representation of the state of your application.
 
 ----
 
-### Actions
+### 📦 Actions
 
 You can think of this as an event. While the *Action* is the actual thing being propagated there are also *Actioncreators* which are functions used to create an action.
 
@@ -97,7 +119,7 @@ export const startPrinting = () => {
 
 ----
 
-### Reducers
+### 📦 Reducers
 
 *Reducers* are function that take a current store and return a new one based on an Action.
 
@@ -114,13 +136,49 @@ const printing = (state = false, action) => {
 }
 ```
 
----
+----
 
-# Pure functions
+### 📦 Combining Reducers
+
+```JavaScript
+import { combineReducers } from 'redux'
+import printing from './printing'
+import orders from './orders'
+
+const reducers = combineReducers({
+  printing,
+  orders
+})
+
+export default reducers
+```
+
+```JavaScript
+const store = createStore(reducers)
+```
+
+Note:
+This can then be used for `createStore` to build the store.
 
 ----
 
-## Definition
+### 📦 Using the Store
+
+```html
+<Provider store={store}>
+    <div>
+        <Button text="Invert" />
+    </div>
+</Provider>
+```
+
+---
+
+# ➡ Pure functions
+
+----
+
+### ➡ Definition
 
 A pure function is one that fulfills two conditions:
 
@@ -129,7 +187,7 @@ A pure function is one that fulfills two conditions:
 -
 ----
 
-## Gains
+### ➡ Gains
 
 - Testability
 - Predictability
@@ -149,13 +207,88 @@ We gain a lot from making our Components and Reducers pure functions and also ha
 
 <img id="flowDiagram" src="res/updateStore.png" style="height: 45vh;padding: 3rem;" />
 
----
+----
 
-# Folderstructure
+### 🔧 Code example
+
+Consider an array of Objects containing an id and some text.
+
+```javascript
+[
+	{
+		id: 'a unique ID here',
+		text: 'this is some text'
+	}, ...
+]
+```
+
+Lets look at how to update a single Object in this array
 
 ----
 
-### Overview
+```javascript
+function updateTextForId(array, id, newText) {
+    return array.map(obj => {
+        if(obj.id === id) {
+
+            //Create a new object only where it is needed with the
+			//updated text.
+            return Object.assign({}, obj, {
+                text: newText
+            })
+        } else {
+
+            //Else just use the old object.
+            return obj
+        }
+    })
+}
+```
+
+---
+
+# ↔ Routing
+
+----
+
+### ↔ Single page Application
+
+[react-router](https://github.com/reactjs/react-router) is a complete routing library for React.
+
+```javascript
+render(
+	< Provider store={store} >
+		<Router history={history}>
+			<Route path="/" component={App}>
+				<IndexRoute component={Orders}  />
+				<Route path="order/:orderId" component={OrderDetail} />
+				<Route path="package/:orderId" component={Package} />
+				<Route path="add/:packId" component={AddPackage} />
+			</Route>
+		</Router>
+    < /Provider>,
+    document.getElementById('app')
+)
+```
+
+----
+
+### ↔ Design decision: Login
+
+FTL and backend handle Login and Main page, after that it is a single page application.
+
+- Login in SPA is hard
+- Frontend models things the backend does not care about
+- Want to use React but backend uses FTL: only implement a Component in one language
+
+
+---
+
+# 📋 Folderstructure
+
+----
+
+### 📋 Overview
 
 ```
 .
@@ -177,7 +310,7 @@ We gain a lot from making our Components and Reducers pure functions and also ha
 
 ----
 
-### JS Folderstructure
+### 📋 JS Folderstructure
 
 ```
 .
@@ -205,11 +338,192 @@ Folderstructure helps especially to quickly find the JS files to work on, mainly
 
 ---
 
-# Testing
+# 🚧 Implementing a feature
 
 ----
 
-### Reducers
+### 🚧 Three steps
+
+1. Build the Components
+2. Build the Reducer
+3. Connect them
+
+Note:
+This is really amazing. Makes it predictable how complex things are.
+
+---
+
+# 🔨 Buildprocess
+
+----
+
+ES6 and JSX need transpiling.
+
+(Maybe also Polyfills)
+
+----
+
+### 🔨 Webpack
+
+Get the [config file](https://gist.github.com/HoverBaum/2dec64c7395529e9bb93af92d7c7e544#file-webpack-config-js) and setup an [npm script](https://docs.npmjs.com/misc/scripts).
+
+```JavaScript
+"webpack": "node node_modules/webpack/bin/webpack.js
+ 	--progress --colors --watch"
+```
+
+```bash
+$ npm run webpack
+
+> react-basic@0.1.0 webpack D:\react-basic
+> node node_modules/webpack/bin/webpack.js --progress --colors --watch
+
+Hash: 9f2265bc4db2c1e07831
+Version: webpack 1.13.1
+Time: 1810ms
+      Asset    Size  Chunks             Chunk Names
+    main.js  727 kB       0  [emitted]  main
+main.js.map  849 kB       0  [emitted]  main
+    + 172 hidden modules
+```
+
+Note:
+That should be one line but looks better like this on slides.
+
+----
+
+### 🔨 See the result
+
+Create an `index.html` in your build folder and use [live-server](https://www.npmjs.com/package/live-server) to see the result.
+
+```JavaScript
+"serve": "./node_modules/.bin/live-server ./build"
+```
+
+| pros | cons |
+|:---:|:---:|
+| fast refresh | no FTL |
+
+But we can substitute [puer-freemarker](https://www.npmjs.com/package/puer-freemarker) to get only the pros and response mocking.
+
+Note:
+Project used FTL for server side rendering.
+
+----
+
+### 🔨 Different Webpack builds
+
+Use an environment variable to define the build folder.
+
+```javascript
+//npm script
+"webpack-dev": "set DEV=true && node node_modules/webpack/bin/webpack.js"
+
+//Calculate different folder based in variable.
+function outputFolder() {
+	if(process.env.DEV.trim() === 'true') {
+		return 'res'
+	}
+	return 'devBuild'
+}
+
+//In the config object
+output: {
+    path: path.join(__dirname, outputFolder(), 'js'),
+    filename: "[name].js"
+}
+```
+
+---
+
+# ⚙ Debugging
+
+----
+
+### ⚙ Find the problem
+
+When you look at a problem with an app build on React and Redux there are three types of possible problems:
+
+1. Rendering errors
+2. State miscalculation
+3. Problems connecting the Store to Components
+
+----
+
+<img id="flowDiagram" src="res/debugReactReduxFlowChart.png" style="height: 45vh;padding: 3rem;" />
+<label for="flowDiagram">
+    Find the source of a bug
+</label>
+
+----
+
+### ⚙ React DevTools
+
+Get the [Chrome extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi).
+
+- See what properties got handed to a Component
+- Find out if its a Component or connection problem
+
+----
+
+### ⚙ Log Actions and state
+
+edux can be extended using [middleware](http://redux.js.org/docs/advanced/Middleware.html). That same page suggests how to implement a [logging middleware](https://gist.github.com/HoverBaum/022905d9c6ca4f7fcd06664ea7e63415).
+
+```JavaScript
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { logger, crashReporter } from './loggingMiddleware'
+
+let store = createStore(
+  reducers,
+  applyMiddleware(logger, crashReporter)
+)
+```
+
+Note:
+Redux also has devtools but they are a pain to set up. More pain then gain.
+
+----
+
+#### ⚙ Example logs
+
+```javascript
+next state
+ Object {printing: false, orders: []}
+dispatching
+ Object {type: "PRINTING_START"}
+next state
+ Object {printing: false, orders: []}
+ ```
+
+----
+
+### ⚙ Sourcemaps
+
+> Using source maps allows developers to maintain a straight-forward debugging environment while at the same time optimizing their sites for performance.
+
+Get pointed to `reducers/printing line: 13`  
+instead of `build.js line: 13758`.
+
+Note:
+Chrome `Ctrl+P` to open file in Source tab of devtools.
+Super helpful thing sourcemaps.
+
+---
+
+# 🔧 Testing
+
+----
+
+### 🔧 What and how
+
+**Components**: manually
+
+**Reducers**: unit tests
+
+----
+
+### 🔧 Reducers
 
 Since our reducers are pure functions they are an ideal thing to test.
 
@@ -217,7 +531,22 @@ Since our reducers are pure functions they are an ideal thing to test.
 
 ----
 
-### Testfiles
+### 🔧 Setup
+
+A nice Tape environment with some pretty output and the ability to use ES6 `import` requires a bit of setup and an npm script.
+
+```bash
+npm install --save-dev tap-spec tape browserif babelify deep-freeze-node
+```
+
+```JavaScript
+"test": "node ./node_modules/browserify/bin/cmd.js test/test.js
+	-t [ babelify --presets [ es2015 react ] ] | node | tap-spec"
+```
+
+----
+
+### 🔧 Testfiles
 
 ```
 .
@@ -227,35 +556,42 @@ Since our reducers are pure functions they are an ideal thing to test.
 └── test.js                     Entry point for all tests
 ```
 
+```javascript
+//test.js
+const test = require('tape')
+
+require('./reducers/order')(test)
+require('./reducers/printing')(test)
+```
 
 ---
 
-# Debugging
-
----
-
-# To tackle a problem
-
----
-
-# Links
+# 📓 Links
 
 Helpful things and further reading.
 
+
 ----
 
-### This is build using:
+### 📓 Follow the links
 
-- Reveal for JS based slides
-- Reveal-md for prototyping
+- [Introducing React](https://www.youtube.com/watch?v=XxVg_s8xAms) (🎬)
+- [ReactJS repos](https://github.com/reactjs/)
+- [Redux docs](http://redux.js.org/)
+- [Blogpost](http://hoverbaum.gitlab.io/2016/07/21/Why-and-how-to-ReactJS/) me on how to set this all up
+- [Basic setup](https://github.com/HoverBaum/react-basic) repo with basic setup as discussed here
+
+----
+
+### 📓 This is build using:
+
+- [Reveal](https://github.com/hakimel/reveal.js/) for JS based slides
+- [Reveal-md](https://github.com/webpro/reveal-md) for prototyping
 - [nodetree](https://www.npmjs.com/package/nodetree) for nice filetrees
 
 ----
 
-### Follow the links
-
-- [Introducing React](https://www.youtube.com/watch?v=XxVg_s8xAms)
-- [Redux devtools](https://github.com/gaearon/redux-devtools)
+# Code on
 
 <!-- Create some styles -->
 <style>
