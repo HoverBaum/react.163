@@ -226,6 +226,8 @@ const doubleButton = ({click}) => {
 export default doubleButton
 ```
 
+Don't put state in your Components!
+
 ----
 
 ### ➡ Immutable
@@ -388,7 +390,94 @@ Folderstructure helps especially to quickly find the JS files to work on, mainly
 
 ---
 
+# 🔨 Buildprocess
+
+----
+
+ES6 and JSX need transpiling.
+
+(Maybe also Polyfills)
+
+
+----
+
+### 🔨 Webpack
+
+Get the [config file](https://gist.github.com/HoverBaum/2dec64c7395529e9bb93af92d7c7e544#file-webpack-config-js) and setup an [npm script](https://docs.npmjs.com/misc/scripts).
+
+```javascript
+"webpack": "node node_modules/webpack/bin/webpack.js
+ 	--progress --colors --watch"
+```
+
+```bash
+$ npm run webpack
+
+> react-basic@0.1.0 webpack D:\react-basic
+> node node_modules/webpack/bin/webpack.js --progress --colors --watch
+
+Hash: 9f2265bc4db2c1e07831
+Version: webpack 1.13.1
+Time: 1810ms
+      Asset    Size  Chunks             Chunk Names
+    main.js  727 kB       0  [emitted]  main
+main.js.map  849 kB       0  [emitted]  main
+    + 172 hidden modules
+```
+
+Note:
+That should be one line but looks better like this on slides.
+
+----
+
+### 🔨 See the result
+
+Create an `index.html` in your build folder and use [live-server](https://www.npmjs.com/package/live-server) to see the result.
+
+```JavaScript
+"serve": "./node_modules/.bin/live-server ./build"
+```
+
+| pros | cons |
+|:---:|:---:|
+| fast refresh | no FTL |
+
+But we can substitute [puer-freemarker](https://www.npmjs.com/package/puer-freemarker) to get only the pros and response mocking.
+
+Note:
+Project used FTL for server side rendering.
+
+----
+
+### 🔨 Different Webpack builds
+
+Use an environment variable to define the build folder.
+
+```javascript
+//npm script
+"webpack-dev": "set DEV=true && node node_modules/webpack/bin/webpack.js"
+
+//Calculate different folder based in variable.
+function outputFolder() {
+	if(process.env.DEV.trim() === 'true') {
+		return 'res'
+	}
+	return 'devBuild'
+}
+
+//In the config object
+output: {
+    path: path.join(__dirname, outputFolder(), 'js'),
+    filename: "[name].js"
+}
+```
+
+---
+
 # 🚧 Implementing a feature
+
+Note:
+Until here was the pain, now comes the gain.
 
 ----
 
@@ -475,90 +564,6 @@ instead of `build.js line: 13758`.
 Note:
 Chrome `Ctrl+P` to open file in Source tab of devtools.
 Super helpful thing sourcemaps.
-
----
-
-# 🔨 Buildprocess
-
-----
-
-ES6 and JSX need transpiling.
-
-(Maybe also Polyfills)
-
-
-----
-
-### 🔨 Webpack
-
-Get the [config file](https://gist.github.com/HoverBaum/2dec64c7395529e9bb93af92d7c7e544#file-webpack-config-js) and setup an [npm script](https://docs.npmjs.com/misc/scripts).
-
-```javascript
-"webpack": "node node_modules/webpack/bin/webpack.js
- 	--progress --colors --watch"
-```
-
-```bash
-$ npm run webpack
-
-> react-basic@0.1.0 webpack D:\react-basic
-> node node_modules/webpack/bin/webpack.js --progress --colors --watch
-
-Hash: 9f2265bc4db2c1e07831
-Version: webpack 1.13.1
-Time: 1810ms
-      Asset    Size  Chunks             Chunk Names
-    main.js  727 kB       0  [emitted]  main
-main.js.map  849 kB       0  [emitted]  main
-    + 172 hidden modules
-```
-
-Note:
-That should be one line but looks better like this on slides.
-
-----
-
-### 🔨 See the result
-
-Create an `index.html` in your build folder and use [live-server](https://www.npmjs.com/package/live-server) to see the result.
-
-```JavaScript
-"serve": "./node_modules/.bin/live-server ./build"
-```
-
-| pros | cons |
-|:---:|:---:|
-| fast refresh | no FTL |
-
-But we can substitute [puer-freemarker](https://www.npmjs.com/package/puer-freemarker) to get only the pros and response mocking.
-
-Note:
-Project used FTL for server side rendering.
-
-----
-
-### 🔨 Different Webpack builds
-
-Use an environment variable to define the build folder.
-
-```javascript
-//npm script
-"webpack-dev": "set DEV=true && node node_modules/webpack/bin/webpack.js"
-
-//Calculate different folder based in variable.
-function outputFolder() {
-	if(process.env.DEV.trim() === 'true') {
-		return 'res'
-	}
-	return 'devBuild'
-}
-
-//In the config object
-output: {
-    path: path.join(__dirname, outputFolder(), 'js'),
-    filename: "[name].js"
-}
-```
 
 ---
 
