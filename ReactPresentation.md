@@ -14,7 +14,7 @@ The code in this presentation makes heavy use of [*ES6*](http://es6-features.org
 - [Default values for parameters](http://es6-features.org/#DefaultParameterValues)
 - [Exporting and importing](http://es6-features.org/#ValueExportImport)
 
-Or read [a full introduction to ES6 features](https://github.com/lukehoban/es6features).
+Here is a [summarz of the above](http://hoverbaum.gitlab.io/2016/07/25/ES6-need-to-know/) or read [a full introduction to ES6 features](https://github.com/lukehoban/es6features).
 
 ---
 
@@ -26,15 +26,13 @@ Or read [a full introduction to ES6 features](https://github.com/lukehoban/es6fe
 
 > For a given state describe how to render your application.
 
-Thus we need concepts and tools to compliment ReactJS when we want to build an application.
-
 ----
 
 ### 💁 Basic Example
 
-```JavaScript
-import React from 'react'
-import { render } from 'react-dom'
+```javascript
+import React from 'react';
+import { render } from 'react-dom';
 
 render (
     <div>
@@ -53,9 +51,9 @@ Components need to be wrapped in a single parent.
 
 A *Component* is a description of how to render a part of our application, like a button.
 
-```JavaScript
+```javascript
 //A simple button component.
-import React from 'react'
+import React from 'react';
 
 const button = ({disabled, text, click}) => (
     <button onClick={disabled ? () => {} : click} >
@@ -69,6 +67,16 @@ export default button
 Note:
 Uses Destructuring to achieve named paramteres that is where the `{}` come from.
 
+----
+
+### 💁 Beyond the display
+
+ReactJS renders our application.
+
+Thus we need concepts and tools to compliment ReactJS when we want to build an application.
+
+We need an approach to handle the state that is to be rendered.
+
 ---
 
 # 📦 Redux
@@ -76,6 +84,8 @@ Uses Destructuring to achieve named paramteres that is where the `{}` come from.
 > Redux is a predictable state container for JavaScript apps.
 
 ----
+
+### 📦 Reduxes idea
 
 A popular approach to handle this `state` that ReactJS renders is [*Redux*](http://redux.js.org/).
 
@@ -94,7 +104,7 @@ It takes a unidirectional approach to dataflow. Meaning data only flows in a sin
 
 The *Store* is the current representation of the state of your application.
 
-```JavaScript
+```javascript
 //The store is simply one big object in JavaScript.
 {
     printing: false,
@@ -108,7 +118,7 @@ The *Store* is the current representation of the state of your application.
 
 You can think of this as an event. While the *Action* is the actual thing being propagated there are also *Actioncreators* which are functions used to create an action.
 
-```JavaScript
+```javascript
 //Use ES6 Syntax to define a function.
 export const startPrinting = () => {
     return {
@@ -123,7 +133,7 @@ export const startPrinting = () => {
 
 *Reducers* are function that take a current store and return a new one based on an Action.
 
-```JavaScript
+```javascript
 //Return a state for the action or a standard one.
 const printing = (state = false, action) => {
     if(action.type === 'PRINTING_START') {
@@ -140,10 +150,10 @@ const printing = (state = false, action) => {
 
 ### 📦 Combining Reducers
 
-```JavaScript
-import { combineReducers } from 'redux'
-import printing from './printing'
-import orders from './orders'
+```javascript
+import { combineReducers } from 'redux';
+import printing from './printing';
+import orders from './orders';
 
 const reducers = combineReducers({
   printing,
@@ -153,12 +163,13 @@ const reducers = combineReducers({
 export default reducers
 ```
 
-```JavaScript
+```javascript
 const store = createStore(reducers)
 ```
 
 Note:
 This can then be used for `createStore` to build the store.
+Just things Redux provides.
 
 ----
 
@@ -174,26 +185,54 @@ This can then be used for `createStore` to build the store.
 
 ---
 
-# ➡ Pure functions
+# ➡ Pure and Immutable
 
 ----
 
-### ➡ Definition
+### ➡ Pure Functions
 
 A pure function is one that fulfills two conditions:
 
 - For a given input it always returns the same output
 - It has no *"side effects"*
--
+
 ----
 
-### ➡ Gains
+### ➡ Pure Components
 
-- Testability
-- Predictability
-- Timetravel
+```javascript
+const button = ({disabled, text, click}) => (
+    <button onClick={disabled ? () => {} : click} >
+        {text}
+    </button>
+)
+```
 
-We gain a lot from making our Components and Reducers pure functions and also have our Reducers return new Objects.
+Our example from earlier is a pure function.
+
+----
+
+#### ➡ Impure Component
+
+```javascript
+import React from 'react';
+
+let clicked = false
+const doubleButton = ({click}) => {
+	<button onClick={clicked ? click() : () => {clicked = true}}
+		Click me twice
+	</button>
+}
+export default doubleButton
+```
+
+Don't put state in your Components!
+
+----
+
+### ➡ Immutable
+
+> An immutable object is an object whose state cannot be modified after it is created
 
 ----
 
@@ -209,7 +248,7 @@ We gain a lot from making our Components and Reducers pure functions and also ha
 
 ----
 
-### 🔧 Code example
+### ➡ Code example
 
 Consider an array of Objects containing an id and some text.
 
@@ -225,6 +264,8 @@ Consider an array of Objects containing an id and some text.
 Lets look at how to update a single Object in this array
 
 ----
+
+### ➡ Code example
 
 ```javascript
 function updateTextForId(array, id, newText) {
@@ -244,6 +285,16 @@ function updateTextForId(array, id, newText) {
     })
 }
 ```
+
+----
+
+### ➡ Gains
+
+- Testability
+- Predictability
+- Timetravel
+
+We gain a lot from making our Components and Reducers pure functions and also from making our Reducers work with immutable Objects.
 
 ---
 
@@ -275,11 +326,12 @@ render(
 
 ### ↔ Design decision: Login
 
-FTL and backend handle Login and Main page, after that it is a single page application.
+FTL and backend handle *Login* and *Main* page, after that it is a single page application.
 
 - Login in SPA is hard
 - Frontend models things the backend does not care about
 - Want to use React but backend uses FTL: only implement a Component in one language
+	- [isomorphic approach](https://github.com/DavidWells/isomorphic-react-example) would be an improvement
 
 
 ---
@@ -290,7 +342,7 @@ FTL and backend handle Login and Main page, after that it is a single page appli
 
 ### 📋 Overview
 
-```
+```text
 .
 ├── docs                        All documentation lives here
 │   ├── actions                 Redux Action documentation
@@ -312,7 +364,7 @@ FTL and backend handle Login and Main page, after that it is a single page appli
 
 ### 📋 JS Folderstructure
 
-```
+```text
 .
 ├── actions
 │   └── index.js                Your Actioncreators
@@ -338,21 +390,6 @@ Folderstructure helps especially to quickly find the JS files to work on, mainly
 
 ---
 
-# 🚧 Implementing a feature
-
-----
-
-### 🚧 Three steps
-
-1. Build the Components
-2. Build the Reducer
-3. Connect them
-
-Note:
-This is really amazing. Makes it predictable how complex things are.
-
----
-
 # 🔨 Buildprocess
 
 ----
@@ -361,13 +398,14 @@ ES6 and JSX need transpiling.
 
 (Maybe also Polyfills)
 
+
 ----
 
 ### 🔨 Webpack
 
 Get the [config file](https://gist.github.com/HoverBaum/2dec64c7395529e9bb93af92d7c7e544#file-webpack-config-js) and setup an [npm script](https://docs.npmjs.com/misc/scripts).
 
-```JavaScript
+```javascript
 "webpack": "node node_modules/webpack/bin/webpack.js
  	--progress --colors --watch"
 ```
@@ -436,6 +474,24 @@ output: {
 
 ---
 
+# 🚧 Implementing a feature
+
+Note:
+Until here was the pain, now comes the gain.
+
+----
+
+### 🚧 Three steps
+
+1. Build the Components
+2. Build the Reducer
+3. Connect them
+
+Note:
+This is really amazing. Makes it predictable how complex things are.
+
+---
+
 # ⚙ Debugging
 
 ----
@@ -470,9 +526,9 @@ Get the [Chrome extension](https://chrome.google.com/webstore/detail/react-devel
 
 edux can be extended using [middleware](http://redux.js.org/docs/advanced/Middleware.html). That same page suggests how to implement a [logging middleware](https://gist.github.com/HoverBaum/022905d9c6ca4f7fcd06664ea7e63415).
 
-```JavaScript
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { logger, crashReporter } from './loggingMiddleware'
+```javascript
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { logger, crashReporter } from './loggingMiddleware';
 
 let store = createStore(
   reducers,
@@ -548,7 +604,7 @@ npm install --save-dev tap-spec tape browserif babelify deep-freeze-node
 
 ### 🔧 Testfiles
 
-```
+```text
 .
 ├── reducers
 │   ├── orders.js               Testing orders reducer
@@ -563,6 +619,115 @@ const test = require('tape')
 require('./reducers/order')(test)
 require('./reducers/printing')(test)
 ```
+
+----
+
+### 🔧 Simple testcase
+
+```javascript
+import printReducer from '../../src/js/reducers/printing';
+import { startPrinting } from '../../src/js/actions';
+
+module.exports = function testText(test) {
+    test('Printing', function(t) {
+
+        const store1 = printReducer(undefined, {})
+        t.equal(store1, false, 'Initial Value correct')
+
+        const secondText = 'Hello World'
+        const store2 = printReducer(store1, startPrinting())
+		t.equal(store2, true, 'Started printing')
+
+		//More tests here and thens end this test case.
+        t.end()
+    })
+}
+```
+
+---
+
+# 🎓 Lessons learned
+
+----
+
+### 🎓 Normalize the Store
+
+Three weeks into development and suddenly all I do is dive deep into nested objects to find correlating ones.
+
+Pull Objects out, give them IDs and reference those.
+
+----
+
+#### 🎓 Before
+
+```javascript
+orders: [
+	{
+		orderId: 'ordersId',
+		name: 'John Doe',
+		packs: [
+			{
+				packId: 'packId'
+			}, ...
+		]
+	}, ...
+]
+```
+
+At `/pack/packId` which is the corresponding order?
+
+----
+
+#### 🎓 After
+
+
+```javascript
+orders: [
+	{
+		orderId: 'ordersId',
+		name: 'John Doe',
+		packs: ['packId', ...]
+	}, ...
+],
+packs: [
+	{
+		packId: 'packId',
+		orderId: 'orderId'
+	}, ...
+]
+```
+
+----
+
+### 🎓 Compute in Components
+
+**Task**: given the already delivered items and the total amount of items that need delivering, calculate the packages that need to be delivered.
+
+Influenced by the Order which has all things that need delivering and packaged packs.
+
+----
+
+#### 🎓 In Reducers
+
+Have both the *Orders* and *packs* Reducer calculate a *toBeDelivered*.
+
+**Problems:**
+- Reducers only know their own space in the Store
+- Where should this be saved
+- Create a way to only implement this once
+
+**Result:** super messy and buggy
+
+----
+
+#### 🎓 In Component
+
+There is only one component which wants to display this and if we have the packs and the order this is a simple transformation.
+
+**Benefits:**
+- Single point of implementation
+- Less code
+- Easier to reason about
 
 ---
 
