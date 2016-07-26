@@ -4,6 +4,18 @@
 
 ----
 
+### Obligatory introduction
+
+Hi, I am Hendrik 🙋
+
+Find me online:
+
+- [GitHub](https://github.com/HoverBaum)
+- [Website](http://hendrikwallbaum.de/)
+- [Blog](http://hoverbaum.gitlab.io/2016/07/21/Why-and-how-to-ReactJS/)
+
+----
+
 ### ES6
 
 The code in this presentation makes heavy use of [*ES6*](http://es6-features.org/). If you are not familiar with the syntax please look it up.
@@ -524,7 +536,7 @@ Get the [Chrome extension](https://chrome.google.com/webstore/detail/react-devel
 
 ### ⚙ Log Actions and state
 
-edux can be extended using [middleware](http://redux.js.org/docs/advanced/Middleware.html). That same page suggests how to implement a [logging middleware](https://gist.github.com/HoverBaum/022905d9c6ca4f7fcd06664ea7e63415).
+Redux can be extended using [middleware](http://redux.js.org/docs/advanced/Middleware.html). That same page suggests how to implement a [logging middleware](https://gist.github.com/HoverBaum/022905d9c6ca4f7fcd06664ea7e63415).
 
 ```javascript
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -735,6 +747,7 @@ There is only one component which wants to display this and if we have the packs
 
 Helpful things and further reading.
 
+This presentation is on [GitHub](https://github.com/HoverBaum/react.163)
 
 ----
 
@@ -753,6 +766,7 @@ Helpful things and further reading.
 - [Reveal](https://github.com/hakimel/reveal.js/) for JS based slides
 - [Reveal-md](https://github.com/webpro/reveal-md) for prototyping
 - [nodetree](https://www.npmjs.com/package/nodetree) for nice filetrees
+- [RevealUzL](https://github.com/UzLMaennchen/revealUzL) theme for Reveal
 
 ----
 
